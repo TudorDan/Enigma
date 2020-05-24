@@ -13,12 +13,19 @@ class Enigma {
 
     public static void main(String[] args) {
         ArgsParser argsParser = new ArgsParser(args);
-        handleCipherOperation(argsParser);
+        if (argsParser.option == null || argsParser.option.equals("-h")) {
+            System.out.println(MENU);
+        } else {
+            handleCipherOperation(argsParser);
+        }
+
     }
 
     private static void handleCipherOperation(ArgsParser argsParser) {
-        Cipher cipher = CipherFactory.getCipherForArgs(argsParser);
+
+//        Cipher cipher = CipherFactory.getCipherForArgs(argsParser);
         // use cipher
+
     }
 
 }
