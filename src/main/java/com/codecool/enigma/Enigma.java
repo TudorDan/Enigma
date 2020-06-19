@@ -11,21 +11,26 @@ class Enigma {
             "   FileName        : path to file to encrypt/decrypt\n" +
             "   EncryptionKey   : Optional -> must be provided if cipher requires a key";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws EnigmaException {
         ArgsParser argsParser = new ArgsParser(args);
         if (argsParser.option == null || argsParser.option.equals("-h")) {
             System.out.println(MENU);
-        } else {
+        } else if (argsParser.option.equals("-e") || argsParser.option.equals("-d")) {
             handleCipherOperation(argsParser);
+        } else {
+            throw new EnigmaException("Invalid arguments");
         }
+
 
     }
 
-    private static void handleCipherOperation(ArgsParser argsParser) {
-
-//        Cipher cipher = CipherFactory.getCipherForArgs(argsParser);
-        // use cipher
-
+    private static void handleCipherOperation(ArgsParser argsParser) throws EnigmaException {
+        if (CipherFactory.isCipherAvailable(argsParser.cipher)) {
+            Cipher cipher = CipherFactory.getCipherForArgs(argsParser);
+            // use cipher
+        } else {
+            throw new EnigmaException("Invalid cipher");
+        }
     }
 
 }
