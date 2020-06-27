@@ -1,5 +1,12 @@
 package com.codecool.enigma;
 
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 class Enigma {
 
     private static String MENU = "Enigma Manual\n" +
@@ -16,7 +23,7 @@ class Enigma {
             ArgsParser argsParser = new ArgsParser(args);
             if (argsParser.option == null) {
                 throw new EnigmaException("Missing option -e or -d or -h");
-            } else  if (argsParser.option.equals("-h")) {
+            } else if (argsParser.option.equals("-h")) {
                 System.out.println(MENU);
             } else if (argsParser.option.equals("-e") || argsParser.option.equals("-d")) {
                 handleCipherOperation(argsParser);
@@ -31,8 +38,40 @@ class Enigma {
 
     private static void handleCipherOperation(ArgsParser argsParser) throws EnigmaException {
         if (CipherFactory.isCipherAvailable(argsParser.cipher)) {
+            // build the cipher
             Cipher cipher = CipherFactory.getCipherForArgs(argsParser);
 
+            // read file content
+            StringBuilder fileContent = new StringBuilder();
+            if (argsParser.file == null) {
+                throw new EnigmaException("Missing file path!");
+            }
+
+            //get file path
+            Path filePath;
+            try  {
+                filePath = Paths.get(argsParser.file).toRealPath();
+            } catch (Exception x) {
+                throw new EnigmaException("Missing or unreadable file: " + x.getMessage());
+            }
+
+            //read file content
+            try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.US_ASCII)) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileContent.append(line).append("\n");
+                }
+            } catch (Exception x) {
+                throw new EnigmaException("Unable to read file: " + x.getMessage());
+            }
+
+            //cipher!
+            assert cipher != null;
+            if (argsParser.option.equals("-e")) {
+                System.out.println(cipher.encrypt(fileContent.toString()));
+            } else {
+                System.out.println(cipher.decrypt(fileContent.toString()));
+            }
         } else {
             throw new EnigmaException("Invalid cipher");
         }
