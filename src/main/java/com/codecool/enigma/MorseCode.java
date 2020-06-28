@@ -26,7 +26,7 @@ class MorseCode implements Cipher {
             }
             for (int j = 0; j < 37 && !found; j++) {
                 if (english[j].equals(temp)) {
-                    result.append(morse[j]);
+                    result.append(morse[j]).append(" ");
                     found = true;
                 }
             }
@@ -39,8 +39,8 @@ class MorseCode implements Cipher {
         int messLength = message.length();
         StringBuilder result = new StringBuilder();
         String temp = "";
-        for (int i = 0; i < messLength; i++) {
-            if (message.charAt(i) == ' ' || (i == messLength -1 && !temp.isEmpty())) {
+        for (int i = 0; i <= messLength; i++) {
+            if ((i == messLength && !temp.isEmpty()) || message.charAt(i) == ' ') {
                 boolean found = false;
                 for (int j = 0; j < 37 && !found; j++) {
                     if (morse[j].equals(temp)) {

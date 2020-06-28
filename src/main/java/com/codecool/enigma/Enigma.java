@@ -49,7 +49,7 @@ class Enigma {
 
             //get file path
             Path filePath;
-            try  {
+            try {
                 filePath = Paths.get(argsParser.file).toRealPath();
             } catch (Exception x) {
                 throw new EnigmaException("Missing or unreadable file: " + x.getMessage());
@@ -61,6 +61,7 @@ class Enigma {
                 while ((line = reader.readLine()) != null) {
                     fileContent.append(line).append("\n");
                 }
+                fileContent.deleteCharAt(fileContent.length() - 1); //delete last new line
             } catch (Exception x) {
                 throw new EnigmaException("Unable to read file: " + x.getMessage());
             }
